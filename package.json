@@ -4,7 +4,7 @@
   "description": "This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.mjs"
   },
   "author": "Shreyas Nayak",
   "license": "GPL-3.0-or-later",
