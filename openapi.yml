@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: NodeJS-FAAS
+  description: >
+    This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements.
+  version: 1.0.0
+servers:
+  - url: http://localhost:9256
+    description: Local
+paths:
+  /server/health:
+    get:
+      tags:
+        - Default
+      summary: Server health check
+      responses:
+        200:
+          description: NodeFAAS - Server is running
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+  /function/myfunction:
+    post:
+      tags:
+        - Default
+      summary: Call a function
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                event_name: "agent_connected"
+                event_data: {}
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: string
+                example:
+                  status: OK
+                  code: 200
+                  message: ""
+                  event_name: agent_login
+                  payload: {}
+  

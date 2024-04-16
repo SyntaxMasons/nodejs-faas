@@ -1,0 +1,17 @@
+{
+	"name": "NodeJS-FAAS",
+	"image": "docker.io/node:20-bookworm-slim",
+    "customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": []
+		}
+	},
+    "portsAttributes": {
+		"3000": {
+			"label": "NodeJS-FAAS",
+			"onAutoForward": "notify"
+		}
+	},
+    "postCreateCommand": ""
+}
