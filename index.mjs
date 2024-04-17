@@ -3,6 +3,21 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import vm from 'vm';
 import cors from 'cors';
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+
+
+function generateAlphanumericName(length = 10) {
+    const alphanumericCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += alphanumericCharacters.charAt(Math.floor(Math.random() * alphanumericCharacters.length));
+    }
+    return result;
+}
+
+
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 
@@ -10,30 +25,91 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-app.use((err, req, res, next) => {
-    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-        return res.status(400).json({
-            "status": "ERROR",
-            "code": 400,
-            "message": "Request body is empty or not valid JSON",
-            "payload": {}
-        });
-    }
-    next();
-});
-
 app.get('/server/health', (req, res) => {
     res.status(200).send('OK');
 });
 
-app.post('/function/:function_name', async (req, res) => {
+app.head('/server/health', (req, res) => {
+    res.status(200).send();
+});
+
+app.get('/function/list', (req, res) => {
+    fs.readdir('functions', (err, files) => {
+        if (err) {
+            return res.status(500).json({
+                "status": "ERROR",
+                "code": 500,
+                "message": err.message,
+                "payload": {}
+            });
+        }
+
+        res.status(200).json({
+            "status": "OK",
+            "code": 200,
+            "message": "",
+            "payload": {
+                "functions": files
+            }
+        });
+    });
+});
+
+app.post('/function/create', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({
+            "status": "ERROR",
+            "code": 400,
+            "message": "No file uploaded",
+            "payload": {}
+        });
+    }
+
+    const file = req.file;
+    const file_id = generateAlphanumericName(25);
+    const file_name = `${file_id}.mjs`;
+    fs.renameSync(file.path, `functions/${file_name}`);
+    res.status(200).json({
+        "status": "OK",
+        "code": 200,
+        "message": "File uploaded successfully",
+        "payload": {
+            "functions_id": file_id
+        }
+    });
+});
+
+app.delete('/function/:function_id', (req, res) => {
+    const function_id = req.params.function_id;
+    const file_name = `${function_id}.mjs`;
+
+    fs.unlink(`functions/${file_name}`, (err) => {
+        if (err) {
+            return res.status(500).json({
+                "status": "ERROR",
+                "code": 500,
+                "message": err.message,
+                "payload": {}
+            });
+        }
+
+        res.status(200).json({
+            "status": "OK",
+            "code": 200,
+            "message": "File deleted successfully",
+            "payload": {}
+        });
+    });
+});
+
+app.post('/function/execute/:function_id', async (req, res) => {
     await new Promise((resolve, reject) => {
         if (!req.body || Object.keys(req.body).length === 0) {
             reject(new Error("Request body is empty or not valid JSON"));
             return;
         }
-        const function_name = req.params.function_name;
-        fs.readFile(`functions/${function_name}.mjs`, 'utf8', (err, code) => {
+        const function_id = req.params.function_id;
+        fs.readFile(`functions/${function_id}.mjs`, 'utf8', (err, code) => {
             if (err) {
                 reject(new Error(err.message));
                 return;
@@ -69,6 +145,7 @@ app.post('/function/:function_name', async (req, res) => {
         }); 
     });
 });
+
 
 const PORT = process.env.PORT || 9256;
 app.listen(PORT, () => {

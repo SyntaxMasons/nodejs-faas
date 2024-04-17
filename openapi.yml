@@ -11,7 +11,7 @@ paths:
   /server/health:
     get:
       tags:
-        - Default
+        - Server
       summary: Server health check
       responses:
         200:
@@ -21,29 +21,158 @@ paths:
               schema:
                 type: string
                 example: OK
-  /function/myfunction:
-    post:
+    head:
       tags:
-        - Default
-      summary: Call a function
-      requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                event_name: "agent_connected"
-                event_data: {}
+        - Server
+      summary: Server health check
       responses:
-        "200":
+        200:
+          description: NodeFAAS - Server is running
+  /function/list:
+    get:
+      tags:
+        - Function
+      summary: Get list of functions
+      responses:
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                type: string
-                example:
-                  status: OK
-                  code: 200
-                  message: ""
-                  event_name: agent_login
+                type: object
+                properties:
+                  status:
+                    type: string
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  payload:
+                    type: array
+                    items:
+                      type: string
+              example:
+                status: OK
+                code: 200
+                message: ""
+                payload: {
+                  "functions": ["VmgtJbe8I2.mjs", "nmgtkbe8I2.mjs"]
+                }
+  /function/{function_id}:
+    delete:
+      tags:
+        - Function
+      summary: Delete a function
+      parameters:
+        - in: path
+          name: function_id
+          required: true
+          description: The alphanumeric ID of the function file to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  code:
+                    type: integer
+                  message:
+                    type: string
                   payload: {}
-  
+              example:
+                status: OK
+                code: 200
+                message: "File deleted successfully"
+                payload: {}
+  /function/create:
+    post:
+      tags:
+        - Function
+      summary: Upload a function file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  payload:
+                    type: object
+              example:
+                status: OK
+                code: 200
+                message: "File uploaded successfully"
+                payload:
+                  function_id: "abcd1234"
+  /function/execute/{function_id}:
+    post:
+      tags:
+        - Function
+      summary: Call a function
+      parameters:
+        - in: path
+          name: function_id
+          required: true
+          description: The file ID of the function
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_name:
+                  type: string
+                  description: Name of the event
+                event_data:
+                  type: object
+                  description: Data associated with the event
+              example:
+                event_name: "agent_connected"
+                event_data: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  payload:
+                    type: object
+              example:
+                status: OK
+                code: 200
+                message: ""
+                payload: {}

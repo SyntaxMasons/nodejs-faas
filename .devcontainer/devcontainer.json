@@ -4,7 +4,9 @@
     "customizations": {
 		"vscode": {
 			"settings": {},
-			"extensions": []
+			"extensions": [
+				"42Crunch.vscode-openapi"
+			]
 		}
 	},
     "portsAttributes": {
