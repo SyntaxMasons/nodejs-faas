@@ -153,8 +153,10 @@ paths:
                   type: object
                   description: Data associated with the event
               example:
-                event_name: "agent_connected"
-                event_data: {}
+                event_name: "get_nasa_image"
+                event_data: {
+                  "key" : "DEMO_KEY"
+                }
       responses:
         '200':
           description: Successful response

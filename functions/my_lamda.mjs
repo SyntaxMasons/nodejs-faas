@@ -1,7 +1,21 @@
+const axios = require('axios');
 
 function main(event, context, callback) {
-    console.log("Sum of 10+20 : ", 10+20); 
-    if(callback) callback(null, data);
+    if(event=="get_nasa_image") {
+        const { key } = context;
+        axios.get(`https://api.nasa.gov/planetary/apod?api_key=${key}`)
+        .then(response => {
+            if(callback) callback({
+                explanation: response.data.explanation
+            });
+        })
+        .catch(error => {
+            if(callback) callback({
+                error: error.message
+            });
+        });   
+    }
 }
+
 
 main(G_EVENT_NAME,G_CONTEXT,G_CALLBACK);

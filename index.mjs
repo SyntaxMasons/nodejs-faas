@@ -4,6 +4,7 @@ import fs from 'fs';
 import vm from 'vm';
 import cors from 'cors';
 import multer from 'multer';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -116,25 +117,37 @@ app.post('/function/execute/:function_id', async (req, res) => {
             }
             const { event_name, event_data } = req.body;
             const context_object = {
+                console: console,
                 G_EVENT_NAME: event_name,
                 G_CONTEXT: event_data,
-                G_CALLBACK: null,
-                console: console,
+                G_CALLBACK: (response_payload) => {
+                    resolve(response_payload);
+                },
+                require: (module_name) => {
+                    switch (module_name) {
+                        case "axios":
+                                return axios;
+                            break;
+                    
+                        default:
+                                throw new Error(`Module '${module_name}' is not allowed.`);
+                            break;
+                    }
+                }
             };
 
             try {
                 vm.runInNewContext(code, context_object);
-                resolve();
             } catch (error) {
                 reject(new Error(error));
             }
         });
-    }).then(() => {
+    }).then((response_payload) => {
         res.status(200).json({
             "status": "OK",
             "code": 200,
             "message": "",
-            "payload": {}
+            "payload": response_payload
         });
     }).catch((error) => {
         res.status(400).json({
