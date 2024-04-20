@@ -1,34 +1,78 @@
 # NodeJS-FAAS
- This project aims to achieve similar to Function as a Service (FaaS) without the overhead of Kubernetes, with extremely low infrastructure requirements.
+This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Kubernetes, with extremely low infrastructure requirements.
 
-# Why NodeJS-FAAS ? Why not any other FAAS ?
-In today's era, event-driven microservice-based architecture is becoming famous. Using FaaS, you can trigger any code based on events. However, when you are hosting the FaaS in any Kubernetes cluster, you also have to consider the cost per function. Node.js FaaS is not going to replace options such as OpenFaaS. Node.js FaaS is an extremely lightweight lambda function.
+# Why NodeJS-FAAS? Why not any other FaaS?
+In today's era, event-driven microservice-based architecture is becoming increasingly popular. Using FaaS, you can trigger any code based on events. However, when you host FaaS in a Kubernetes cluster, you also have to consider the cost per function. NodeJS-FaaS is not intended to replace options such as OpenFaaS. Instead, NodeJS-FaaS offers an extremely lightweight lambda function solution.
 
-# How it works ? 
-NodeJS-FAAS uses the built-in Node.js VM module to run the code.
+# How does it work?
+NodeJS-FAAS utilizes the built-in Node.js VM module to execute the code.
 
-# How to setup
-You can setup nodejs-faas using docker or containerd
+# How to set up
+You can set up NodeJS-FAAS using Docker or Containerd.
 
-Pull using docker 
+Pull using Docker:
 
-`docker pull shreyasnayak21/nodejs-faas:latest`
+```
+docker pull shreyasnayak21/nodejs-faas:latest
+```
 
-Run using docker
+Run using Docker:
 
-`docker run -p 9256:9256 nodejs-faas:latest`
+```
+docker run -p 9256:9256 nodejs-faas:latest
+```
 
+Pull using Containerd:
 
-Pull using containerd 
+```
+nerdctl pull shreyasnayak21/nodejs-faas:latest
+```
 
-`nerdctl pull shreyasnayak21/nodejs-faas:latest`
+Run using Containerd:
 
-Run using containerd
+```
+nerdctl run -p 9256:9256 nodejs-faas:latest
+```
 
-`nerdctl run -p 9256:9256 nodejs-faas:latest`
+Alternatively, you can use `pm2` to run the source code:
 
-or also you can use `pm2` run the source code
+```
+npm install
+npm start
+```
 
-`npm install` and `npm start`
+You can run the Node using the following command:
 
-you can run the node using following command `pm2 start index.mjs --name NodeJS-FAAS`
+```
+pm2 start index.mjs --name NodeJS-FAAS
+```
+
+# How to use?
+Currently, we provide an interface over [HTTP API](openapi.yml). You can create a lambda function or upload code formatted in an `mjs` file to the instance, and you can execute the function using the API. Additionally, there are plans to add NATS.io or Pub/Sub to trigger a function.
+
+# Example Code
+
+### Call Http API
+
+```mjs
+const axios = require('axios');
+
+function main(event, context, callback) {
+    if(event=="get_nasa_image") {
+        const { key } = context;
+        axios.get(`https://api.nasa.gov/planetary/apod?api_key=${key}`)
+        .then(response => {
+            if(callback) callback({
+                explanation: response.data.explanation
+            });
+        })
+        .catch(error => {
+            if(callback) callback({
+                error: error.message
+            });
+        });   
+    }
+}
+
+main(G_EVENT_NAME,G_CONTEXT,G_CALLBACK);
+```
