@@ -1,12 +1,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import vm from 'vm';
 import cors from 'cors';
 import multer from 'multer';
 import axios from 'axios';
+import swaggerUi from 'swagger-ui-express';
 import { v4 as uuidv4 } from 'uuid';
 
+/* Utility to get __dirname in ES modules */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function generateAlphanumericName(length = 10) {
     const alphanumericCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -25,6 +31,11 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+
+/* OpenAPI DOC */
+const openApiFilePath = path.join(__dirname, 'openapi.json');
+const openApiDocument = JSON.parse(fs.readFileSync(openApiFilePath, 'utf8'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.get('/server/health', (req, res) => {
     res.status(200).send('OK');
