@@ -76,3 +76,11 @@ function main(event, context, callback) {
 
 main(G_EVENT_NAME,G_CONTEXT,G_CALLBACK);
 ```
+
+# Generate token
+Genarte the .env file 
+`JWT_KEY=MY_SECRET_KEY`
+
+`apt-get update`
+
+`apt-get install jq jw`

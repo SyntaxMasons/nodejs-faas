@@ -2,9 +2,23 @@
     "openapi": "3.0.0",
     "info": {
       "title": "NodeJS-FAAS",
-      "description": "This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements.",
+      "description": "This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements. \n Github repository link : [Click Here](https://github.com/shreyasnayak/nodejs-faas)",
       "version": "1.0.0"
     },
+    "components": {
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ],  
     "paths": {
       "/server/health": {
         "get": {
@@ -73,7 +87,7 @@
                       "code": 200,
                       "message": "",
                       "payload": {
-                        "functions": ["VmgtJbe8I2.mjs", "nmgtkbe8I2.mjs"]
+                        "function_ids": ["VmgtJbe8I2", "nmgtkbe8I2"]
                       }
                     }
                   }
