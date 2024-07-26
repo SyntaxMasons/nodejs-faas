@@ -5,12 +5,6 @@
       "description": "This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements.",
       "version": "1.0.0"
     },
-    "servers": [
-      {
-        "url": "http://localhost:9256",
-        "description": "Local"
-      }
-    ],
     "paths": {
       "/server/health": {
         "get": {

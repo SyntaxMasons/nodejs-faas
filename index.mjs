@@ -23,7 +23,6 @@ function generateAlphanumericName(length = 10) {
     return result;
 }
 
-
 const upload = multer({ dest: 'uploads/' });
 
 const app = express();
@@ -169,7 +168,6 @@ app.post('/function/execute/:function_id', async (req, res) => {
         }); 
     });
 });
-
 
 const PORT = process.env.PORT || 9256;
 app.listen(PORT, () => {

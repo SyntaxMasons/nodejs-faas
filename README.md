@@ -13,25 +13,25 @@ You can set up NodeJS-FAAS using Docker or Containerd.
 Pull using Docker:
 
 ```
-docker pull shreyasnayak21/nodejs-faas:latest
+docker pull shreyasnayak21/nodejs-faas:1.1.0
 ```
 
 Run using Docker:
 
 ```
-docker run -p 9256:9256 nodejs-faas:latest
+docker run -p 9256:9256 shreyasnayak21/nodejs-faas:1.1.0
 ```
 
 Pull using Containerd:
 
 ```
-nerdctl pull shreyasnayak21/nodejs-faas:latest
+nerdctl pull shreyasnayak21/nodejs-faas:1.1.0
 ```
 
 Run using Containerd:
 
 ```
-nerdctl run -p 9256:9256 nodejs-faas:latest
+nerdctl run -p 9256:9256 shreyasnayak21/nodejs-faas:1.1.0
 ```
 
 Alternatively, you can use `pm2` to run the source code:
@@ -48,7 +48,7 @@ pm2 start index.mjs --name NodeJS-FAAS
 ```
 
 # How to use?
-Currently, we provide an interface over [HTTP API](openapi.yml). You can create a lambda function or upload code formatted in an `mjs` file to the instance, and you can execute the function using the API. Additionally, there are plans to add NATS.io or Pub/Sub to trigger a function.
+Currently, we provide an interface over [HTTP API](openapi.json). You can create a lambda function or upload code formatted in an `mjs` file to the instance, and you can execute the function using the API. Additionally, there are plans to add NATS.io or Pub/Sub to trigger a function.
 
 # Example Code
 
