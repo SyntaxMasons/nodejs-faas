@@ -1,6 +1,6 @@
 {
   "name": "nodejs-faas",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "This project aims to achieve something similar to Function as a Service (FaaS) without the overhead of Docker or Kubernetes, with extremely low infrastructure requirements.",
   "main": "index.js",
   "scripts": {
