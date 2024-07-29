@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 /* OpenAPI DOC */
 const openApiFilePath = path.join(__dirname, 'openapi.json');
 const openApiDocument = JSON.parse(fs.readFileSync(openApiFilePath, 'utf8'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
+app.use('/nodejsfaas/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 
 /* Security Middleware */
@@ -65,18 +65,18 @@ const authenticateToken = (req, res, next) => {
       req.decoded = decoded;
       next();
     });
-  };
+};
 
   
-app.get('/server/health', (req, res) => {
+app.get('/nodejsfaas/server/health', (req, res) => {
     res.status(200).send('OK');
 });
 
-app.head('/server/health', (req, res) => {
+app.head('/nodejsfaas/server/health', (req, res) => {
     res.status(200).send();
 });
 
-app.get('/function/list', authenticateToken, (req, res) => {
+app.get('/nodejsfaas/function/list', authenticateToken, (req, res) => {
     fs.readdir(`functions/${req.decoded.namespace}`, (err, files) => {
         if (err) {
             return res.status(500).json({
@@ -101,7 +101,7 @@ app.get('/function/list', authenticateToken, (req, res) => {
     });
 });
 
-app.post('/function/create', authenticateToken, upload.single('file'), (req, res) => {
+app.post('/nodejsfaas/function/create', authenticateToken, upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({
             "status": "ERROR",
@@ -134,7 +134,7 @@ app.post('/function/create', authenticateToken, upload.single('file'), (req, res
     });
 });
 
-app.delete('/function/:function_id', authenticateToken, (req, res) => {
+app.delete('/nodejsfaas/function/:function_id', authenticateToken, (req, res) => {
     const function_id = req.params.function_id;
     const file_name = `${function_id}.mjs`;
 
@@ -157,7 +157,7 @@ app.delete('/function/:function_id', authenticateToken, (req, res) => {
     });
 });
 
-app.post('/function/execute/:function_id', authenticateToken, async (req, res) => {
+app.post('/nodejsfaas/function/execute/:function_id', authenticateToken, async (req, res) => {
     await new Promise((resolve, reject) => {
         if (!req.body || Object.keys(req.body).length === 0) {
             reject(new Error("Request body is empty or not valid JSON"));
