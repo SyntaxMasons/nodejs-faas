@@ -25,7 +25,7 @@ docker pull shreyasnayak21/nodejs-faas:1.2.0
 To run the Docker container:
 
 ```sh
-docker run -d -p 9256:9256 shreyasnayak21/nodejs-faas:1.2.0 --env JWT_KEY=QX2A0p84VmmLF3NYz3uHPx1hLuhT2U2K
+docker run -d -p 9256:9256 -e JWT_KEY=1X2A0p84VmmLF3NYz3uHPx1hLuhT2U24 -v functions:/opt/app/functions shreyasnayak21/nodejs-faas:1.2.0
 ```
 
 ### Using Containerd
@@ -39,7 +39,7 @@ nerdctl pull shreyasnayak21/nodejs-faas:1.2.0
 To run the container with Containerd:
 
 ```sh
-nerdctl run -d -p 9256:9256 shreyasnayak21/nodejs-faas:1.2.0 --env JWT_KEY=QX2A0p84VmmLF3NYz3uHPx1hLuhT2U2K
+nerdctl run -d -p 9256:9256 -e JWT_KEY=1X2A0p84VmmLF3NYz3uHPx1hLuhT2U24 -v functions:/opt/app/functions shreyasnayak21/nodejs-faas:1.2.0
 ```
 
 ### Using `pm2`
