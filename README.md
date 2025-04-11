@@ -100,3 +100,8 @@ To generate a token, visit the [JWT Generator Website](https://jwt.io/). Use the
     "namespace": "neo"
 }
 ```
+
+## Contact
+
+If you have any questions or would like to collaborate, feel free to reach out:  
+📬 [LinkedIn – Shreyas Nayak](https://linkedin.com/in/shreyas-nayak-1826a710a)
