@@ -28,7 +28,7 @@ function generateAlphanumericName(length = 10) {
     return result;
 }
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'storage/uploads/' });
 
 const app = express();
 
@@ -77,7 +77,7 @@ app.head('/nodejsfaas/server/health', (req, res) => {
 });
 
 app.get('/nodejsfaas/function/list', authenticateToken, (req, res) => {
-    fs.readdir(`functions/${req.decoded.namespace}`, (err, files) => {
+    fs.readdir(`storage/functions/${req.decoded.namespace}`, (err, files) => {
         if (err) {
             return res.status(500).json({
                 "status": "ERROR",
@@ -114,7 +114,7 @@ app.post('/nodejsfaas/function/create', authenticateToken, upload.single('file')
     const file = req.file;
     const file_id = generateAlphanumericName(25);
     const file_name = `${file_id}.mjs`;
-    const directory = `functions/${req.decoded.namespace}`;
+    const directory = `storage/functions/${req.decoded.namespace}`;
     
     // Ensure the directory exists
     if (!fs.existsSync(directory)) {
@@ -138,7 +138,7 @@ app.delete('/nodejsfaas/function/:function_id', authenticateToken, (req, res) =>
     const function_id = req.params.function_id;
     const file_name = `${function_id}.mjs`;
 
-    fs.unlink(`functions/${req.decoded.namespace}/${file_name}`, (err) => {
+    fs.unlink(`storage/functions/${req.decoded.namespace}/${file_name}`, (err) => {
         if (err) {
             return res.status(500).json({
                 "status": "ERROR",
@@ -164,7 +164,7 @@ app.post('/nodejsfaas/function/execute/:function_id', authenticateToken, async (
             return;
         }
         const function_id = req.params.function_id;
-        fs.readFile(`functions/${req.decoded.namespace}/${function_id}.mjs`, 'utf8', (err, code) => {
+        fs.readFile(`storage/functions/${req.decoded.namespace}/${function_id}.mjs`, 'utf8', (err, code) => {
             if (err) {
                 reject(new Error("Function does not exist"));
                 return;
