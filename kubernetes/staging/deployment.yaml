@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nodejs-faas
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: nodejs-faas
