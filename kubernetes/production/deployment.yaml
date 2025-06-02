@@ -24,7 +24,7 @@ spec:
           value: "1X2A0p84VmmLF3NYz3uHPx1hLuhT2U24"
         volumeMounts:
         - name: functions-volume
-          mountPath: /opt/app/storage/functions
+          mountPath: /opt/app/storage
       volumes:
       - name: functions-volume
         persistentVolumeClaim:

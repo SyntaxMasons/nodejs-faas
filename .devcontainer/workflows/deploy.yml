@@ -1,42 +1,22 @@
-name: Node.js CI/CD
+name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - '*'  # Triggers on any tag push
 
 jobs:
-  build-deploy:
-    runs-on: node:20-bookworm-slim
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'v18.17.0'
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Install Dependencies
-        run: npm install
+    - name: Build the Docker image
+      run: docker build . -f Dockerfile -t shreyasnayak21/nodejs-faas:${{ github.ref_name }}
 
-      - name: Run Build (optional)
-        run: npm run build
-
-      - name: Run Tests (optional)
-        run: npm test
-
-    Optional: Docker image build & push
-      - name: Build Docker Image
-        run: docker build -t shreyasnayak21/nodejs-faas:beta .
-
-      # - name: Push to DockerHub or GHCR
-      #   run: echo "push step here"
-
-      # Example Deploy: rsync to server (update credentials & IP)
-      # - name: Deploy to Server
-      #   run: rsync -avz ./ user@your-server-ip:/opt/nodejs-faas/
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Push Docker image
+      run: docker push shreyasnayak21/nodejs-faas:${{ github.ref_name }}
