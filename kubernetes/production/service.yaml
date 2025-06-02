@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nodejs-faas-service
+  name: nodejs-faas-production-service
 spec:
   selector:
     app: nodejs-faas

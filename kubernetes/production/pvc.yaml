@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: functions-pvc
+  name: functions-production-pvc
 spec:
   accessModes:
   - ReadWriteOnce

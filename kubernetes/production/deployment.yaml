@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodejs-faas
+  name: nodejs-faas-production
   labels:
-    app: nodejs-faas
+    app: nodejs-faas-production
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nodejs-faas
+      app: nodejs-faas-production
   template:
     metadata:
       labels:
-        app: nodejs-faas
+        app: nodejs-faas-production
     spec:
       containers:
-      - name: nodejs-faas
+      - name: nodejs-faas-production
         image: shreyasnayak21/nodejs-faas:1.2.0
         ports:
         - containerPort: 9256
