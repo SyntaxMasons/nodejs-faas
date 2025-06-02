@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-faas-service
+spec:
+  selector:
+    app: nodejs-faas
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9256
+  type: ClusterIP
